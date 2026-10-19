@@ -17,16 +17,16 @@ import LoadingSpinner from './ui/LoadingSpinner';
 import EmptyState from './ui/EmptyState';
 import { formatCurrency } from './SummaryCards';
 
-const DONUT_COLORS = [
-  '#ef4444',
-  '#f97316',
-  '#eab308',
-  '#22c55e',
-  '#3b82f6',
-  '#8b5cf6',
-  '#ec4899',
-  '#06b6d4',
-  '#84cc16',
+const LUXURY_PALETTE = [
+  '#6366f1', // Electric Indigo
+  '#10b981', // Emerald
+  '#f43f5e', // Rose Coral
+  '#f59e0b', // Amber Gold
+  '#06b6d4', // Cyan
+  '#8b5cf6', // Violet
+  '#ec4899', // Hot Pink
+  '#3b82f6', // Azure Blue
+  '#14b8a6', // Teal
 ];
 
 export function ExpenseDonut({ summary, loading }) {
@@ -68,20 +68,33 @@ export function ExpenseDonut({ summary, loading }) {
       return (
         <div
           style={{
-            backgroundColor: 'var(--bg-card)',
+            background: 'var(--bg-card)',
+            backdropFilter: 'blur(16px)',
             border: '1px solid var(--border-color)',
             borderRadius: 'var(--radius-sm)',
-            padding: '0.5rem 0.75rem',
-            boxShadow: 'var(--card-shadow)',
+            padding: '0.65rem 0.95rem',
+            boxShadow: 'var(--card-shadow-hover)',
             color: 'var(--text-primary)',
             fontSize: '0.8rem',
           }}
         >
-          <div style={{ fontWeight: 600, color: data.payload.fill || 'var(--text-primary)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontWeight: 700, marginBottom: '0.25rem' }}>
+            <span
+              style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: data.payload.fill || 'var(--brand-primary)',
+              }}
+            />
             {data.name}
           </div>
-          <div>Amount: {formatCurrency(val, currency)}</div>
-          <div style={{ color: 'var(--text-secondary)' }}>Share: {pct}%</div>
+          <div className="num" style={{ fontWeight: 700, fontSize: '0.925rem' }}>
+            {formatCurrency(val, currency)}
+          </div>
+          <div style={{ color: 'var(--text-muted)', fontSize: '0.725rem', marginTop: '0.15rem' }}>
+            {pct}% of monthly burn
+          </div>
         </div>
       );
     }
@@ -89,18 +102,25 @@ export function ExpenseDonut({ summary, loading }) {
   };
 
   return (
-    <div className="card" style={{ marginBottom: '1.25rem' }}>
-      <h4 className="card-title" style={{ fontSize: '1rem', marginBottom: '1rem' }}>
-        Expenses by Category
-      </h4>
+    <div className="card" style={{ marginBottom: '1.5rem' }}>
+      <div className="card-header" style={{ marginBottom: '0.85rem' }}>
+        <div>
+          <h4 className="card-title" style={{ fontSize: '0.975rem', margin: 0 }}>
+            Allocation Breakdown
+          </h4>
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+            Expense Distribution by Category
+          </div>
+        </div>
+      </div>
 
       {loading ? (
-        <LoadingSpinner message="Loading chart..." />
+        <LoadingSpinner message="Aggregating categories..." />
       ) : donutData.length === 0 ? (
         <EmptyState
           icon="🍩"
-          title="No expenses"
-          subtitle="No expense data recorded for this period"
+          title="Zero Outflow"
+          subtitle="No expenses recorded for the active period"
         />
       ) : (
         <div style={{ position: 'relative', width: '100%', height: 260 }}>
@@ -110,15 +130,16 @@ export function ExpenseDonut({ summary, loading }) {
                 data={donutData}
                 cx="50%"
                 cy="50%"
-                innerRadius={65}
-                outerRadius={95}
-                paddingAngle={3}
+                innerRadius={68}
+                outerRadius={98}
+                paddingAngle={4}
                 dataKey="value"
+                stroke="none"
               >
                 {donutData.map((_, index) => (
                   <Cell
                     key={`cell-${index}`}
-                    fill={DONUT_COLORS[index % DONUT_COLORS.length]}
+                    fill={LUXURY_PALETTE[index % LUXURY_PALETTE.length]}
                   />
                 ))}
               </Pie>
@@ -126,7 +147,7 @@ export function ExpenseDonut({ summary, loading }) {
             </PieChart>
           </ResponsiveContainer>
 
-          {/* Center text for donut chart */}
+          {/* Glowing Center Metric Badge */}
           <div
             style={{
               position: 'absolute',
@@ -140,21 +161,23 @@ export function ExpenseDonut({ summary, loading }) {
           >
             <div
               style={{
-                fontSize: '0.72rem',
-                color: 'var(--text-secondary)',
+                fontSize: '0.675rem',
+                color: 'var(--text-muted)',
                 textTransform: 'uppercase',
-                fontWeight: 600,
-                letterSpacing: '0.05em',
+                fontWeight: 700,
+                letterSpacing: '0.06em',
               }}
             >
-              Total
+              Total Burn
             </div>
             <div
+              className="num"
               style={{
-                fontSize: '0.95rem',
-                fontWeight: 700,
+                fontSize: '1rem',
+                fontWeight: 800,
                 color: 'var(--text-primary)',
                 wordBreak: 'break-word',
+                marginTop: '0.15rem',
               }}
             >
               {formatCurrency(totalExpense, currency)}
@@ -194,19 +217,21 @@ export function MonthlyBarChart({ history = [], loading }) {
       return (
         <div
           style={{
-            backgroundColor: 'var(--bg-card)',
+            background: 'var(--bg-card)',
+            backdropFilter: 'blur(16px)',
             border: '1px solid var(--border-color)',
             borderRadius: 'var(--radius-sm)',
-            padding: '0.5rem 0.75rem',
-            boxShadow: 'var(--card-shadow)',
+            padding: '0.65rem 0.95rem',
+            boxShadow: 'var(--card-shadow-hover)',
             color: 'var(--text-primary)',
             fontSize: '0.8rem',
           }}
         >
-          <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>{label}</div>
+          <div style={{ fontWeight: 700, marginBottom: '0.35rem', letterSpacing: '-0.01em' }}>{label}</div>
           {payload.map((entry, index) => (
-            <div key={`item-${index}`} style={{ color: entry.color, margin: '0.15rem 0' }}>
-              {entry.name}: {formatCurrency(entry.value)}
+            <div key={`item-${index}`} style={{ display: 'flex', justifyContent: 'space-between', gap: '0.85rem', margin: '0.2rem 0' }}>
+              <span style={{ color: entry.color, fontWeight: 600 }}>{entry.name}:</span>
+              <span className="num" style={{ fontWeight: 700 }}>{formatCurrency(entry.value)}</span>
             </div>
           ))}
         </div>
@@ -216,18 +241,25 @@ export function MonthlyBarChart({ history = [], loading }) {
   };
 
   return (
-    <div className="card" style={{ marginBottom: '1.25rem' }}>
-      <h4 className="card-title" style={{ fontSize: '1rem', marginBottom: '1rem' }}>
-        Income vs Expense Trend
-      </h4>
+    <div className="card" style={{ marginBottom: '1.5rem' }}>
+      <div className="card-header" style={{ marginBottom: '0.85rem' }}>
+        <div>
+          <h4 className="card-title" style={{ fontSize: '0.975rem', margin: 0 }}>
+            Macro Velocity (6 Mo)
+          </h4>
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+            Cash Flow Trend: Inflow vs Outflow
+          </div>
+        </div>
+      </div>
 
       {loading ? (
-        <LoadingSpinner message="Loading monthly trend..." />
+        <LoadingSpinner message="Calculating trends..." />
       ) : chartData.length === 0 ? (
         <EmptyState
           icon="📊"
-          title="No history yet"
-          subtitle="Monthly history will show here as you track your finances"
+          title="Awaiting Historical Data"
+          subtitle="Past months will graph automatically as transactions are recorded"
         />
       ) : (
         <div style={{ width: '100%', height: 260 }}>
@@ -236,36 +268,48 @@ export function MonthlyBarChart({ history = [], loading }) {
               data={chartData}
               margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} />
+              <defs>
+                <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.9} />
+                  <stop offset="100%" stopColor="#047857" stopOpacity={0.7} />
+                </linearGradient>
+                <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#f43f5e" stopOpacity={0.9} />
+                  <stop offset="100%" stopColor="#be123c" stopOpacity={0.7} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" vertical={false} opacity={0.6} />
               <XAxis
                 dataKey="displayMonth"
-                stroke="var(--text-secondary)"
-                tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
+                stroke="var(--text-muted)"
+                tick={{ fontSize: 11, fill: 'var(--text-muted)', fontFamily: 'var(--font-sans)', fontWeight: 600 }}
                 tickLine={false}
+                axisLine={false}
               />
               <YAxis
-                stroke="var(--text-secondary)"
-                tick={{ fontSize: 11, fill: 'var(--text-secondary)' }}
+                stroke="var(--text-muted)"
+                tick={{ fontSize: 11, fill: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
                 tickLine={false}
+                axisLine={false}
                 tickFormatter={(val) => `$${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}`}
               />
               <Tooltip content={<CustomBarTooltip />} />
               <Legend
-                wrapperStyle={{ fontSize: '0.8rem', paddingTop: '0.5rem' }}
+                wrapperStyle={{ fontSize: '0.75rem', paddingTop: '0.75rem', fontWeight: 600 }}
               />
               <Bar
                 dataKey="income"
-                name="Income"
-                fill="#22c55e"
-                radius={[4, 4, 0, 0]}
-                maxBarSize={36}
+                name="Inflow"
+                fill="url(#incomeGradient)"
+                radius={[6, 6, 0, 0]}
+                maxBarSize={32}
               />
               <Bar
                 dataKey="expense"
-                name="Expense"
-                fill="#ef4444"
-                radius={[4, 4, 0, 0]}
-                maxBarSize={36}
+                name="Outflow"
+                fill="url(#expenseGradient)"
+                radius={[6, 6, 0, 0]}
+                maxBarSize={32}
               />
             </BarChart>
           </ResponsiveContainer>

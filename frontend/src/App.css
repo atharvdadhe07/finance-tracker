@@ -1,49 +1,116 @@
-/* App Layout and Header Styles */
+/* ==========================================================================
+   Vault UI — App Layout, Header & Responsive Controls
+   ========================================================================== */
 
 .app-wrapper {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
 }
 
+/* Luxury Sticky Top Header */
 .header {
-  background-color: var(--bg-card);
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-color);
-  padding: 0.875rem 1.5rem;
+  padding: 0.95rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: sticky;
   top: 0;
   z-index: 50;
-  box-shadow: var(--card-shadow);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
 
 .header-brand {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.85rem;
 }
 
-.header-brand h1 {
+.brand-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--brand-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--brand-glow);
+  color: #ffffff;
   font-size: 1.25rem;
-  font-weight: 700;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.brand-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--accent-green);
+  box-shadow: 0 0 8px var(--accent-green);
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.6; }
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.75rem;
 }
 
+/* Main Grid Layout */
 .app-layout {
   display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  max-width: 1440px;
+  grid-template-columns: 380px 1fr;
+  gap: 1.75rem;
+  padding: 2rem;
+  max-width: 1540px;
   margin: 0 auto;
   width: 100%;
   flex: 1;
@@ -53,26 +120,25 @@
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: calc(56px + 1.5rem);
+  top: calc(64px + 1.75rem);
   height: fit-content;
-  max-height: calc(100vh - 56px - 2rem);
+  max-height: calc(100vh - 64px - 2.5rem);
   overflow-y: auto;
-  padding-right: 0.25rem;
+  padding-right: 0.4rem;
 }
 
-/* Custom scrollbar for sidebar */
 .sidebar::-webkit-scrollbar {
   width: 5px;
 }
 .sidebar::-webkit-scrollbar-thumb {
   background: var(--border-color);
-  border-radius: 4px;
+  border-radius: 9999px;
 }
 
 .content {
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Prevents overflow in grid child */
+  min-width: 0;
 }
 
 .content-top-actions {
@@ -80,93 +146,90 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.tx-counter-pill {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
 .mobile-view-toggle {
   display: none;
 }
 
-/* Medium Breakpoint: Tablet & Below */
-@media (max-width: 992px) {
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 1100px) {
   .app-layout {
-    grid-template-columns: 320px 1fr;
-    padding: 1rem;
-    gap: 1rem;
+    grid-template-columns: 340px 1fr;
+    padding: 1.25rem;
+    gap: 1.25rem;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 880px) {
   .header {
-    padding: 0.75rem 1rem;
-  }
-
-  .header-brand h1 {
-    font-size: 1.1rem;
-  }
-
-  .header-actions {
-    gap: 0.4rem;
-  }
-
-  .header-actions .btn {
-    padding: 0.4rem 0.65rem;
-    font-size: 0.775rem;
+    padding: 0.85rem 1.25rem;
   }
 
   .app-layout {
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    gap: 1.25rem;
+    gap: 1.5rem;
   }
 
   .sidebar {
     position: static;
     max-height: none;
     overflow-y: visible;
-  }
-}
-
-/* Small Breakpoint: Mobile screens */
-@media (max-width: 480px) {
-  .header {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .header-actions {
-    width: 100%;
-    justify-content: flex-end;
-    overflow-x: auto;
+    padding-right: 0;
   }
 
   .mobile-view-toggle {
     display: flex;
     width: 100%;
-    margin-bottom: 1rem;
-    background-color: var(--bg-card);
+    margin-bottom: 1.25rem;
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    padding: 0.25rem;
-    gap: 0.25rem;
+    padding: 0.3rem;
+    gap: 0.35rem;
+    box-shadow: var(--shadow-sm);
   }
 
   .mobile-toggle-btn {
     flex: 1;
-    padding: 0.5rem;
-    font-size: 0.8rem;
-    font-weight: 600;
+    padding: 0.6rem;
+    font-size: 0.825rem;
+    font-weight: 700;
     border: none;
     background: transparent;
-    color: var(--text-secondary);
-    border-radius: 4px;
+    color: var(--text-muted);
+    border-radius: var(--radius-xs);
     cursor: pointer;
-    transition: var(--transition);
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
   }
 
   .mobile-toggle-btn.active {
-    background-color: var(--accent-blue);
+    background: var(--brand-gradient);
     color: #ffffff;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
   }
 
   .sidebar.mobile-hidden {
@@ -176,8 +239,26 @@
   .content.mobile-hidden {
     display: none;
   }
+}
+
+@media (max-width: 540px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header-actions .btn {
+    flex: 1;
+    font-size: 0.75rem;
+    padding: 0.45rem 0.6rem;
+  }
 
   .app-layout {
-    padding: 0.75rem;
+    padding: 0.85rem;
   }
 }

@@ -20,20 +20,33 @@ export default function FilterBar({ filters, onChange, categories = [] }) {
     });
   };
 
+  const hasActiveFilters =
+    filters.type !== '' ||
+    filters.category !== '' ||
+    (filters.q && filters.q.trim() !== '') ||
+    (filters.month && filters.month !== currentMonth);
+
   return (
-    <div className="card filter-bar-card" style={{ marginBottom: '1.25rem' }}>
+    <div
+      className="card filter-bar-card"
+      style={{
+        marginBottom: '1.25rem',
+        padding: '1.15rem',
+        background: 'linear-gradient(145deg, var(--bg-card) 0%, rgba(99, 102, 241, 0.02) 100%)',
+      }}
+    >
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-          gap: '0.75rem',
+          gap: '0.85rem',
           alignItems: 'flex-end',
         }}
       >
         {/* Month Selector */}
         <div className="form-group" style={{ marginBottom: 0 }}>
           <label className="form-label" htmlFor="filter-month">
-            Month
+            Period
           </label>
           <input
             id="filter-month"
@@ -47,7 +60,7 @@ export default function FilterBar({ filters, onChange, categories = [] }) {
         {/* Type Selector */}
         <div className="form-group" style={{ marginBottom: 0 }}>
           <label className="form-label" htmlFor="filter-type">
-            Type
+            Flow Type
           </label>
           <select
             id="filter-type"
@@ -55,9 +68,9 @@ export default function FilterBar({ filters, onChange, categories = [] }) {
             value={filters.type || ''}
             onChange={(e) => handleFieldChange('type', e.target.value)}
           >
-            <option value="">All Types</option>
-            <option value="INCOME">Income</option>
-            <option value="EXPENSE">Expense</option>
+            <option value="">All Flows</option>
+            <option value="INCOME">✦ Income (Inflow)</option>
+            <option value="EXPENSE">● Expense (Outflow)</option>
           </select>
         </div>
 
@@ -88,27 +101,48 @@ export default function FilterBar({ filters, onChange, categories = [] }) {
         {/* Search Notes Input */}
         <div className="form-group" style={{ marginBottom: 0 }}>
           <label className="form-label" htmlFor="filter-search">
-            Search Notes
+            Search
           </label>
-          <input
-            id="filter-search"
-            type="text"
-            className="form-control"
-            placeholder="Search notes..."
-            value={filters.q || ''}
-            onChange={(e) => handleFieldChange('q', e.target.value)}
-          />
+          <div style={{ position: 'relative' }}>
+            <input
+              id="filter-search"
+              type="text"
+              className="form-control"
+              placeholder="Search memo & notes..."
+              value={filters.q || ''}
+              onChange={(e) => handleFieldChange('q', e.target.value)}
+              style={{ paddingLeft: '2.2rem' }}
+            />
+            <span
+              style={{
+                position: 'absolute',
+                left: '0.75rem',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                color: 'var(--text-muted)',
+                pointerEvents: 'none',
+                fontSize: '0.85rem',
+              }}
+            >
+              🔍
+            </span>
+          </div>
         </div>
 
-        {/* Clear Filters Button */}
+        {/* Reset / Clear Button */}
         <div style={{ display: 'flex', alignItems: 'flex-end' }}>
           <button
             type="button"
             className="btn btn-secondary"
             onClick={handleClear}
-            style={{ width: '100%' }}
+            disabled={!hasActiveFilters}
+            style={{
+              width: '100%',
+              opacity: hasActiveFilters ? 1 : 0.6,
+              cursor: hasActiveFilters ? 'pointer' : 'default',
+            }}
           >
-            Clear Filters
+            Reset Filters
           </button>
         </div>
       </div>

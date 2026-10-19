@@ -140,10 +140,19 @@ function MainApp() {
 
   return (
     <div className="app-wrapper">
-      {/* Header */}
+      {/* Luxury Header */}
       <header className="header">
         <div className="header-brand">
-          <h1>💰 Finance Tracker</h1>
+          <div className="brand-badge">✦</div>
+          <div className="brand-text">
+            <div className="brand-title">
+              VAULT <span className="brand-pill">FINANCE OS</span>
+            </div>
+            <div className="brand-subtitle">
+              <span className="pulse-dot"></span>
+              <span>Redis Ledger • Single User</span>
+            </div>
+          </div>
         </div>
 
         <div className="header-actions">
@@ -154,7 +163,7 @@ function MainApp() {
             disabled={isSeeding}
             title="Load sample transactions and budget"
           >
-            {isSeeding ? 'Loading...' : '📥 Load Sample Data'}
+            {isSeeding ? 'Seeding...' : '✨ Load Sample Data'}
           </button>
 
           <button
@@ -172,7 +181,7 @@ function MainApp() {
             onClick={toggleTheme}
             aria-label="Toggle theme"
             title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-            style={{ fontSize: '1rem', width: '34px', height: '34px' }}
+            style={{ fontSize: '1rem', width: '38px', height: '38px' }}
           >
             {dark ? '☀️' : '🌙'}
           </button>
@@ -230,12 +239,14 @@ function MainApp() {
                 setShowAddForm(!showAddForm);
                 if (editingTransaction) setEditingTransaction(null);
               }}
+              style={{ padding: '0.65rem 1.25rem', fontSize: '0.9rem' }}
             >
-              {showAddForm ? '✕ Close Form' : '+ Add Transaction'}
+              {showAddForm ? '✕ Close Form' : '✦ Add Transaction'}
             </button>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              {transactions.length} transaction{transactions.length === 1 ? '' : 's'}
-            </span>
+            <div className="tx-counter-pill">
+              <span style={{ color: 'var(--brand-primary)', fontWeight: 700 }}>●</span>
+              <span>{transactions.length} record{transactions.length === 1 ? '' : 's'}</span>
+            </div>
           </div>
 
           {showAddForm && (
